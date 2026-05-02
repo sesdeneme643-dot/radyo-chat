@@ -50,8 +50,7 @@ function gonder(){
 }
 
 socket.on("mesaj", (data)=>{
-  document.getElementById("chat").innerHTML += 
-"<div style='background:#1e293b;padding:8px;margin:5px;border-radius:10px;'>"+data+"</div>";
+  document.getElementById("chat").innerHTML += "<p>"+data+"</p>";
 });
 
 socket.on("kullanicilar", (users)=>{
