@@ -3,6 +3,8 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
+let users = [];
+
 app.get("/", (req, res) => {
   res.send(`
 <!DOCTYPE html>
@@ -10,13 +12,46 @@ app.get("/", (req, res) => {
 <head>
 <meta charset="UTF-8">
 <title>Radyo Chat</title>
+
 <style>
-body { background:#0f172a; color:white; font-family:Arial; }
-#chat { height:300px; overflow:auto; border:1px solid #444; padding:10px; }
-input { margin:5px; padding:5px; }
-button { padding:5px 10px; background:#22c55e; border:none; color:white; }
-#users { margin-top:10px; }
+body {
+  background:#0f172a;
+  color:white;
+  font-family:Arial;
+}
+
+#chat {
+  height:300px;
+  overflow:auto;
+  border:1px solid #444;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+input {
+  padding:6px;
+  margin:5px;
+}
+
+button {
+  padding:6px 12px;
+  background:#22c55e;
+  border:none;
+  color:white;
+  cursor:pointer;
+}
+
+#users {
+  background:#1e293b;
+  padding:10px;
+  margin-top:10px;
+}
+
+.admin { color:red; }
+.dj { color:orange; }
+.canli { color:lime; font-weight:bold; }
 </style>
+
 </head>
 
 <body>
@@ -28,64 +63,4 @@ button { padding:5px 10px; background:#22c55e; border:none; color:white; }
 
 <div id="chat"></div>
 
-<input id="mesaj" placeholder="Mesaj">
-<button onclick="gonder()">Gönder</button>
-
-<h3>👥 Online</h3>
-<ul id="users"></ul>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-const socket = io();
-let isim = "";
-
-function gir(){
-  isim = document.getElementById("isim").value;
-  socket.emit("kullanici", isim);
-}
-
-function gonder(){
-  let mesaj = document.getElementById("mesaj").value;
-  socket.emit("mesaj", isim + ": " + mesaj);
-}
-
-socket.on("mesaj", (data)=>{
-  document.getElementById("chat").innerHTML += 
-"<div style='background:#1e293b;padding:8px;margin:5px;border-radius:10px;'>"+data+"</div>";
-});
-
-socket.on("kullanicilar", (users)=>{
-  let html = "";
-  users.forEach(u=>{
-    html += "<li>🟢 " + u.isim + "</li>";
-  });
-  document.getElementById("users").innerHTML = html;
-});
-</script>
-
-</body>
-</html>
-  `);
-});
-
-let users = [];
-
-io.on("connection", (socket) => {
-
-  socket.on("kullanici", (isim) => {
-    users.push({ id: socket.id, isim });
-    io.emit("kullanicilar", users);
-  });
-
-  socket.on("mesaj", (data) => {
-    io.emit("mesaj", data);
-  });
-
-  socket.on("disconnect", () => {
-    users = users.filter(u => u.id !== socket.id);
-    io.emit("kullanicilar", users);
-  });
-
-});
-
-http.listen(process.env.PORT || 3000);
+<input id="mes
