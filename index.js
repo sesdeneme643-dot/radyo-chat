@@ -46,10 +46,6 @@ button {
   padding:10px;
   margin-top:10px;
 }
-
-.admin { color:red; }
-.dj { color:orange; }
-.canli { color:lime; font-weight:bold; }
 </style>
 
 </head>
@@ -63,4 +59,4 @@ button {
 
 <div id="chat"></div>
 
-<input id="mes
+<input
